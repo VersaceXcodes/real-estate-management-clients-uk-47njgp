@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750196618386,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_DataImportExport",
+      "version": "1750196617341"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/UV_DataImportExport.tsx",
+      "type": "text",
+      "size": 8413,
+      "dependencies": false
+    }
+  ]
+}

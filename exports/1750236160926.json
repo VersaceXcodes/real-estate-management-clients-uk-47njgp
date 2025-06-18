@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750236160926,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_Navbar",
+      "version": "1750236160260"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/GV_Navbar.tsx",
+      "type": "text",
+      "size": 10573,
+      "dependencies": false
+    }
+  ]
+}

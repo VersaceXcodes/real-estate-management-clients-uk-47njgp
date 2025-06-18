@@ -1,0 +1,15 @@
+{
+  "timestamp": 1750189479930,
+  "operation": {
+    "id": "settings:config:package"
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/package.json",
+      "type": "text",
+      "size": 2910,
+      "dependencies": true
+    }
+  ]
+}

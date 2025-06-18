@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750236278478,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_Sidebar",
+      "version": "1750236278013"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/GV_Sidebar.tsx",
+      "type": "text",
+      "size": 8536,
+      "dependencies": false
+    }
+  ]
+}

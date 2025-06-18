@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750236036857,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_Error",
+      "version": "1750236035987"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/UV_Error.tsx",
+      "type": "text",
+      "size": 2953,
+      "dependencies": false
+    }
+  ]
+}

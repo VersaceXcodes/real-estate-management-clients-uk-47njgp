@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750236338219,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "GV_NotificationsPanel",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/GV_NotificationsPanel.tsx",
+      "type": "text",
+      "size": 3989,
+      "dependencies": false
+    }
+  ]
+}

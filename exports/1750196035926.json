@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750196035926,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_AppointmentList",
+      "version": "1750196035663"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/UV_AppointmentList.tsx",
+      "type": "text",
+      "size": 9222,
+      "dependencies": false
+    }
+  ]
+}

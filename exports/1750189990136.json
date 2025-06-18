@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750189990136,
+  "operation": {
+    "id": "webapp:react:views",
+    "refs": {
+      "id": "UV_AppointmentForm",
+      "version": "1750189570378"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/components/views/UV_AppointmentForm.tsx",
+      "type": "text",
+      "size": 11438,
+      "dependencies": false
+    }
+  ]
+}

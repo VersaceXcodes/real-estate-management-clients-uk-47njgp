@@ -1,0 +1,1626 @@
+openapi: 3.0.0
+info:
+  title: UK EstateHub API
+  version: 1.0.0
+  description: API for managing real estate client records, appointments,
+    communications, properties, user accounts, and bulk data operations.
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/auth/login:
+    post:
+      summary: Authenticate user and generate JWT token
+      operationId: auth_login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/auth/logout:
+    post:
+      summary: Logout and invalidate JWT token
+      operationId: auth_logout
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      responses:
+        "200":
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/auth/forgot-password:
+    post:
+      summary: Initiate password reset process
+      operationId: auth_forgot_password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ForgotPasswordRequest"
+      responses:
+        "200":
+          description: Password reset link sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/users:
+    post:
+      summary: Create a new user account
+      operationId: create_user
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a paginated list of users
+      operationId: get_users
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Search query for users
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of users to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset for pagination
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+          description: Field to sort by
+        - in: query
+          name: sort_order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: Sort order
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve user details by ID
+      operationId: get_user_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update user details
+      operationId: update_user
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a user account
+      operationId: delete_user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/clients:
+    post:
+      summary: Create a new client record
+      operationId: create_client
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientRequest"
+      responses:
+        "201":
+          description: Client created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a list of clients
+      operationId: get_clients
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Search query for clients
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of clients to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Offset for pagination
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+          description: Field to sort by
+        - in: query
+          name: sort_order
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+          description: Sort order
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/clients/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve client details by ID
+      operationId: get_client_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Client details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update client details
+      operationId: update_client
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientRequest"
+      responses:
+        "200":
+          description: Client updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a client record
+      operationId: delete_client
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Client deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/clients/import:
+    post:
+      summary: Bulk import clients via CSV/Excel file
+      operationId: import_clients
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        "200":
+          description: Bulk import result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "400":
+          description: Import failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/clients/export:
+    get:
+      summary: Export clients data to CSV/Excel
+      operationId: export_clients
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Optional filter for export
+      responses:
+        "200":
+          description: Exported client data file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Export failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/client-property-interests:
+    post:
+      summary: Create a new client property interest record
+      operationId: create_client_property_interest
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientPropertyInterestRequest"
+      responses:
+        "201":
+          description: Client property interest created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientPropertyInterest"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a list of client property interests
+      operationId: get_client_property_interests
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          description: Filter by client ID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of records to return
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Pagination offset
+      responses:
+        "200":
+          description: List of client property interests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientPropertyInterest"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/client-property-interests/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve a client property interest by ID
+      operationId: get_client_property_interest_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Client property interest details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientPropertyInterest"
+        "404":
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update a client property interest record
+      operationId: update_client_property_interest
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientPropertyInterestRequest"
+      responses:
+        "200":
+          description: Record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientPropertyInterest"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a client property interest record
+      operationId: delete_client_property_interest
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Record deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Record not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/properties:
+    post:
+      summary: Create a new property record
+      operationId: create_property
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePropertyRequest"
+      responses:
+        "201":
+          description: Property created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a list of properties
+      operationId: get_properties
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Search query for properties
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of records
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Pagination offset
+      responses:
+        "200":
+          description: List of properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Property"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/properties/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve property details by ID
+      operationId: get_property_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Property details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "404":
+          description: Property not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update property details
+      operationId: update_property
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePropertyRequest"
+      responses:
+        "200":
+          description: Property updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a property record
+      operationId: delete_property
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Property deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Property not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/appointments:
+    post:
+      summary: Schedule a new appointment
+      operationId: create_appointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAppointmentRequest"
+      responses:
+        "201":
+          description: Appointment scheduled successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a list of appointments
+      operationId: get_appointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          description: Filter by client ID
+        - in: query
+          name: agent_id
+          schema:
+            type: string
+          description: Filter by agent ID
+        - in: query
+          name: date
+          schema:
+            type: string
+          description: Filter by appointment date
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of records
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Pagination offset
+      responses:
+        "200":
+          description: List of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Appointment"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/appointments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve appointment details by ID
+      operationId: get_appointment_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Appointment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "404":
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update appointment details
+      operationId: update_appointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAppointmentRequest"
+      responses:
+        "200":
+          description: Appointment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Appointment"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete an appointment
+      operationId: delete_appointment
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Appointment deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/communication-logs:
+    post:
+      summary: Create a new communication log entry
+      operationId: create_communication_log
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCommunicationLogRequest"
+      responses:
+        "201":
+          description: Communication log created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationLog"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a list of communication logs
+      operationId: get_communication_logs
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          description: Filter logs by client ID
+        - in: query
+          name: communication_type
+          schema:
+            type: string
+          description: Filter by communication type (e.g., call, email)
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of records
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Pagination offset
+      responses:
+        "200":
+          description: List of communication logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CommunicationLog"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/communication-logs/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve communication log entry by ID
+      operationId: get_communication_log_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Communication log details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationLog"
+        "404":
+          description: Log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update a communication log entry
+      operationId: update_communication_log
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCommunicationLogRequest"
+      responses:
+        "200":
+          description: Communication log updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommunicationLog"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a communication log entry
+      operationId: delete_communication_log
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Communication log deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Log not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/client-documents:
+    post:
+      summary: Upload a new client document
+      operationId: create_client_document
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientDocumentRequest"
+      responses:
+        "201":
+          description: Client document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientDocument"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      summary: Retrieve a list of client documents
+      operationId: get_client_documents
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: client_id
+          schema:
+            type: string
+          description: Filter documents by client ID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Maximum number of records
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Pagination offset
+      responses:
+        "200":
+          description: List of client documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientDocument"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/client-documents/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve client document details by ID
+      operationId: get_client_document_by_id
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Client document details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientDocument"
+        "404":
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      summary: Update client document details
+      operationId: update_client_document
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientDocumentRequest"
+      responses:
+        "200":
+          description: Client document updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClientDocument"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete a client document
+      operationId: delete_client_document
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Client document deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+        "404":
+          description: Document not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/user-settings/{user_id}:
+    get:
+      summary: Retrieve settings for a specific user
+      operationId: get_user_settings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User settings retrieved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSettings"
+        "404":
+          description: Settings not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/user-settings/{id}:
+    put:
+      summary: Update user settings
+      operationId: update_user_settings
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserSettingsRequest"
+      responses:
+        "200":
+          description: User settings updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserSettings"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - token
+        - user
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - username
+        - email
+        - role
+        - created_at
+        - updated_at
+    CreateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+      required:
+        - username
+        - email
+        - password
+        - role
+    UpdateUserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+    CreateClientRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        status:
+          type: string
+        additional_details:
+          type: object
+      required:
+        - first_name
+        - last_name
+        - email
+        - phone
+        - address
+        - status
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        status:
+          type: string
+        additional_details:
+          type: object
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - first_name
+        - last_name
+        - email
+        - phone
+        - address
+        - status
+        - created_at
+        - updated_at
+    UpdateClientRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        status:
+          type: string
+        additional_details:
+          type: object
+    CreateClientPropertyInterestRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        property_type:
+          type: string
+        preferred_location:
+          type: string
+        price_min:
+          type: number
+        price_max:
+          type: number
+        additional_notes:
+          type: string
+      required:
+        - client_id
+        - property_type
+        - preferred_location
+    ClientPropertyInterest:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        property_type:
+          type: string
+        preferred_location:
+          type: string
+        price_min:
+          type: number
+        price_max:
+          type: number
+        additional_notes:
+          type: string
+        created_at:
+          type: string
+      required:
+        - id
+        - client_id
+        - property_type
+        - preferred_location
+        - created_at
+    UpdateClientPropertyInterestRequest:
+      type: object
+      properties:
+        property_type:
+          type: string
+        preferred_location:
+          type: string
+        price_min:
+          type: number
+        price_max:
+          type: number
+        additional_notes:
+          type: string
+    CreatePropertyRequest:
+      type: object
+      properties:
+        address:
+          type: string
+        property_type:
+          type: string
+        price:
+          type: number
+        status:
+          type: string
+        description:
+          type: string
+      required:
+        - address
+        - property_type
+        - price
+        - status
+    Property:
+      type: object
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        property_type:
+          type: string
+        price:
+          type: number
+        status:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - address
+        - property_type
+        - price
+        - status
+        - created_at
+        - updated_at
+    UpdatePropertyRequest:
+      type: object
+      properties:
+        address:
+          type: string
+        property_type:
+          type: string
+        price:
+          type: number
+        status:
+          type: string
+        description:
+          type: string
+    CreateAppointmentRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        property_id:
+          type: string
+        agent_id:
+          type: string
+        appointment_date:
+          type: string
+        appointment_time:
+          type: string
+        notes:
+          type: string
+        is_confirmed:
+          type: boolean
+      required:
+        - client_id
+        - agent_id
+        - appointment_date
+        - appointment_time
+    Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        property_id:
+          type: string
+        agent_id:
+          type: string
+        appointment_date:
+          type: string
+        appointment_time:
+          type: string
+        notes:
+          type: string
+        is_confirmed:
+          type: boolean
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - client_id
+        - agent_id
+        - appointment_date
+        - appointment_time
+        - is_confirmed
+        - created_at
+        - updated_at
+    UpdateAppointmentRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        property_id:
+          type: string
+        agent_id:
+          type: string
+        appointment_date:
+          type: string
+        appointment_time:
+          type: string
+        notes:
+          type: string
+        is_confirmed:
+          type: boolean
+    CreateCommunicationLogRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        user_id:
+          type: string
+        communication_type:
+          type: string
+        note:
+          type: string
+        follow_up_flag:
+          type: boolean
+        timestamp:
+          type: string
+      required:
+        - client_id
+        - user_id
+        - communication_type
+        - note
+        - follow_up_flag
+        - timestamp
+    CommunicationLog:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        user_id:
+          type: string
+        communication_type:
+          type: string
+        note:
+          type: string
+        follow_up_flag:
+          type: boolean
+        timestamp:
+          type: string
+      required:
+        - id
+        - client_id
+        - user_id
+        - communication_type
+        - note
+        - follow_up_flag
+        - timestamp
+    UpdateCommunicationLogRequest:
+      type: object
+      properties:
+        communication_type:
+          type: string
+        note:
+          type: string
+        follow_up_flag:
+          type: boolean
+        timestamp:
+          type: string
+    CreateClientDocumentRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+        document_name:
+          type: string
+        document_url:
+          type: string
+        document_type:
+          type: string
+        uploaded_at:
+          type: string
+      required:
+        - client_id
+        - document_name
+        - document_url
+        - document_type
+        - uploaded_at
+    ClientDocument:
+      type: object
+      properties:
+        id:
+          type: string
+        client_id:
+          type: string
+        document_name:
+          type: string
+        document_url:
+          type: string
+        document_type:
+          type: string
+        uploaded_at:
+          type: string
+      required:
+        - id
+        - client_id
+        - document_name
+        - document_url
+        - document_type
+        - uploaded_at
+    UpdateClientDocumentRequest:
+      type: object
+      properties:
+        document_name:
+          type: string
+        document_url:
+          type: string
+        document_type:
+          type: string
+        uploaded_at:
+          type: string
+    UpdateUserSettingsRequest:
+      type: object
+      properties:
+        dashboard_preferences:
+          type: object
+        notification_settings:
+          type: object
+        configuration:
+          type: object
+    UserSettings:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        dashboard_preferences:
+          type: object
+        notification_settings:
+          type: object
+        configuration:
+          type: object
+        updated_at:
+          type: string
+      required:
+        - id
+        - user_id
+        - updated_at
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message

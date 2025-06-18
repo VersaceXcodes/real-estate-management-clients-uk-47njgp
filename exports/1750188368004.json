@@ -1,0 +1,15 @@
+{
+  "timestamp": 1750188368004,
+  "operation": {
+    "id": "backend:server:main"
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/backend/server.ts",
+      "type": "text",
+      "size": 39136,
+      "dependencies": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "timestamp": 1750189478563,
+  "operation": {
+    "id": "webapp:react:store",
+    "refs": {
+      "id": "redux",
+      "version": "latest"
+    }
+  },
+  "projectId": "real-estate-management-clients-uk",
+  "files": [
+    {
+      "path": "../../apps/real-estate-management-clients-uk/vitereact/src/store/main.tsx",
+      "type": "text",
+      "size": 3789,
+      "dependencies": false
+    }
+  ]
+}
